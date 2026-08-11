@@ -1,3 +1,10 @@
+Yeh URL directly kholo — seedha edit screen pe le jayega:
+
+**https://github.com/udaysukjora-lgtm/-empty-no-README-/edit/main/main.py**
+
+Wahan textbox ke andar tap karke sab select karo (long-press → "Select all"), delete karo, phir neeche wala poora code paste kar do (code ke corner mein copy icon hai):
+
+```python
 import os
 import enum
 from datetime import datetime, timedelta
@@ -7,6 +14,7 @@ from fastapi import (
     FastAPI, Depends, HTTPException, WebSocket, WebSocketDisconnect,
     UploadFile, File,
 )
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy import (
     create_engine, Column, BigInteger, String, Text, Boolean, TIMESTAMP,
@@ -189,6 +197,16 @@ manager = ConnectionManager()
 
 # ---------- App ----------
 app = FastAPI(title="Messaging App API")
+
+# TODO: restrict allow_origins to your actual web/mobile app domain(s) once you have one
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 Base.metadata.create_all(bind=engine)
 
 
@@ -362,3 +380,6 @@ async def websocket_endpoint(websocket: WebSocket, token: str, db: Session = Dep
 
     except WebSocketDisconnect:
         manager.disconnect(user_id)
+```
+
+Commit karne ke baad bata dena, main redeploy track kar lunga.
