@@ -1,4 +1,4 @@
-import os
+       import os
 import enum
 from datetime import datetime, timedelta
 from typing import Optional, List, Dict
@@ -370,3 +370,6 @@ async def websocket_endpoint(websocket: WebSocket, token: str, db: Session = Dep
                             "user_id": user_id,
                         },
                     )
+
+    except WebSocketDisconnect:
+        manager.disconnect(user_id)           
