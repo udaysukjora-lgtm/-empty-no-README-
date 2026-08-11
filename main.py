@@ -1,10 +1,3 @@
-Yeh URL directly kholo — seedha edit screen pe le jayega:
-
-**https://github.com/udaysukjora-lgtm/-empty-no-README-/edit/main/main.py**
-
-Wahan textbox ke andar tap karke sab select karo (long-press → "Select all"), delete karo, phir neeche wala poora code paste kar do (code ke corner mein copy icon hai):
-
-```python
 import os
 import enum
 from datetime import datetime, timedelta
@@ -377,9 +370,3 @@ async def websocket_endpoint(websocket: WebSocket, token: str, db: Session = Dep
                             "user_id": user_id,
                         },
                     )
-
-    except WebSocketDisconnect:
-        manager.disconnect(user_id)
-```
-
-Commit karne ke baad bata dena, main redeploy track kar lunga.
