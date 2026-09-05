@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.http import JsonResponse
 from django.urls import include, path
+from django.views.generic import TemplateView
 
 
 def health_check(request):
@@ -12,4 +13,8 @@ urlpatterns = [
     path("api/v1/health/", health_check),
     path("api/v1/", include("transactions.urls")),
     path("api/v1/", include("webhooks.urls")),
+    path(
+        "razorpay/checkout-test/",
+        TemplateView.as_view(template_name="transactions/razorpay_checkout_test.html"),
+    ),
 ]

@@ -21,14 +21,21 @@ class Transaction(models.Model):
         NETBANKING = "netbanking", "Netbanking"
         WALLET = "wallet", "Wallet"
 
+    class Provider(models.TextChoices):
+        SIMULATED = "simulated", "Simulated (test rules, no real processor)"
+        RAZORPAY = "razorpay", "Razorpay"
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     merchant = models.ForeignKey(Merchant, on_delete=models.CASCADE, related_name="transactions")
     amount = models.DecimalField(max_digits=12, decimal_places=2)
     amount_refunded = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     currency = models.CharField(max_length=3, default="INR")
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.CREATED)
-    payment_method = models.CharField(max_length=20, choices=PaymentMethod.choices)
+    provider = models.CharField(max_length=20, choices=Provider.choices, default=Provider.SIMULATED)
+    payment_method = models.CharField(max_length=20, choices=PaymentMethod.choices, blank=True)
     payment_method_details = models.JSONField(default=dict, blank=True)
+    provider_order_id = models.CharField(max_length=64, blank=True)
+    provider_payment_id = models.CharField(max_length=64, blank=True)
     customer_email = models.EmailField(blank=True)
     customer_reference = models.CharField(max_length=255, blank=True)
     description = models.CharField(max_length=255, blank=True)
@@ -55,6 +62,11 @@ class Transaction(models.Model):
     @property
     def amount_refundable(self):
         return self.amount - self.amount_refunded
+
+    def amount_in_subunits(self, amount=None) -> int:
+        """Razorpay (and most processors) take amounts in the smallest
+        currency unit — paise for INR, cents for USD, etc."""
+        return int((amount if amount is not None else self.amount) * 100)
 
 
 class Refund(models.Model):

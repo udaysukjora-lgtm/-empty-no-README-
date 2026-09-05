@@ -92,3 +92,9 @@ REST_FRAMEWORK = {
 
 # Test-mode card numbers used by the simulated processor (see transactions/services.py).
 TEST_CARD_DECLINE_SUFFIXES = ["0002", "0069", "0127"]
+
+# Razorpay test-mode credentials (see transactions/razorpay_service.py).
+# Get these from Settings > API Keys in the Razorpay dashboard (test mode).
+RAZORPAY_KEY_ID = os.getenv("RAZORPAY_KEY_ID", "")
+RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET", "")
+RAZORPAY_WEBHOOK_SECRET = os.getenv("RAZORPAY_WEBHOOK_SECRET", "")

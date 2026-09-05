@@ -95,6 +95,12 @@ def authorize(transaction: Transaction, payment_details: dict) -> None:
 def capture(transaction: Transaction) -> None:
     if transaction.status != Transaction.Status.AUTHORIZED:
         raise ValueError(f"Cannot capture a transaction in status '{transaction.status}'")
+
+    if transaction.provider == Transaction.Provider.RAZORPAY:
+        from . import razorpay_service
+        razorpay_service.capture_payment(transaction)
+        return
+
     transaction.status = Transaction.Status.CAPTURED
     transaction.save(update_fields=["status", "updated_at"])
     dispatch_event(transaction.merchant, "payment.captured", _transaction_payload(transaction))
@@ -106,12 +112,18 @@ def refund(transaction: Transaction, amount: Decimal, reason: str = "") -> Refun
     if amount <= 0 or amount > transaction.amount_refundable:
         raise ValueError("Refund amount exceeds the refundable balance")
 
+    if transaction.provider == Transaction.Provider.RAZORPAY:
+        from . import razorpay_service
+        gateway_reference = razorpay_service.refund_payment(transaction, amount, reason)
+    else:
+        gateway_reference = _fake_gateway_reference()
+
     refund_obj = Refund.objects.create(
         transaction=transaction,
         amount=amount,
         reason=reason,
         status=Refund.Status.SUCCEEDED,
-        gateway_reference=_fake_gateway_reference(),
+        gateway_reference=gateway_reference,
     )
 
     transaction.amount_refunded += amount
