@@ -42,10 +42,17 @@ class AutoRank_Admin {
 		$score       = (int) get_post_meta( $post->ID, '_autorank_seo_score', true );
 		$issues      = get_post_meta( $post->ID, '_autorank_seo_issues', true );
 
-		$color = $score >= 80 ? '#1a7e3c' : ( $score >= 50 ? '#b8860b' : '#c0392b' );
+		$readability_score  = get_post_meta( $post->ID, '_autorank_readability_score', true );
+		$readability_label  = get_post_meta( $post->ID, '_autorank_readability_label', true );
+		$readability_issues = get_post_meta( $post->ID, '_autorank_readability_issues', true );
+
+		$color              = $score >= 80 ? '#1a7e3c' : ( $score >= 50 ? '#b8860b' : '#c0392b' );
+		$readability_color  = $readability_score >= 60 ? '#1a7e3c' : ( $readability_score >= 30 ? '#b8860b' : '#c0392b' );
 		?>
 		<p>
 			<strong>SEO score: <span style="color: <?php echo esc_attr( $color ); ?>;"><?php echo esc_html( $score ?: '—' ); ?>/100</span></strong>
+			&nbsp;&nbsp;
+			<strong>Readability: <span style="color: <?php echo esc_attr( $readability_color ); ?>;"><?php echo esc_html( '' !== $readability_score ? $readability_score . '/100 (' . $readability_label . ')' : '—' ); ?></span></strong>
 			<?php if ( ! $post->post_content ) : ?>
 				<em>(save/publish to calculate)</em>
 			<?php endif; ?>
@@ -64,9 +71,17 @@ class AutoRank_Admin {
 			<textarea id="autorank_description" name="autorank_description" class="widefat" rows="3" placeholder="Leave blank to auto-generate from the content."><?php echo esc_textarea( $description ); ?></textarea>
 		</p>
 		<?php if ( ! empty( $issues ) ) : ?>
-			<p><strong>Issues found:</strong></p>
+			<p><strong>SEO issues found:</strong></p>
 			<ul style="list-style: disc; margin-left: 20px;">
 				<?php foreach ( $issues as $issue ) : ?>
+					<li><?php echo esc_html( $issue ); ?></li>
+				<?php endforeach; ?>
+			</ul>
+		<?php endif; ?>
+		<?php if ( ! empty( $readability_issues ) ) : ?>
+			<p><strong>Readability feedback:</strong></p>
+			<ul style="list-style: disc; margin-left: 20px;">
+				<?php foreach ( $readability_issues as $issue ) : ?>
 					<li><?php echo esc_html( $issue ); ?></li>
 				<?php endforeach; ?>
 			</ul>
@@ -138,14 +153,20 @@ class AutoRank_Admin {
 			)
 		);
 
-		$scores = array();
+		$scores             = array();
+		$readability_scores = array();
 		foreach ( $posts as $p ) {
 			$s = get_post_meta( $p->ID, '_autorank_seo_score', true );
 			if ( '' !== $s ) {
 				$scores[ $p->ID ] = (int) $s;
 			}
+			$r = get_post_meta( $p->ID, '_autorank_readability_score', true );
+			if ( '' !== $r ) {
+				$readability_scores[ $p->ID ] = (int) $r;
+			}
 		}
-		$avg = $scores ? round( array_sum( $scores ) / count( $scores ) ) : 0;
+		$avg             = $scores ? round( array_sum( $scores ) / count( $scores ) ) : 0;
+		$avg_readability = $readability_scores ? round( array_sum( $readability_scores ) / count( $readability_scores ) ) : 0;
 		asort( $scores );
 		$worst = array_slice( $scores, 0, 10, true );
 
@@ -160,6 +181,10 @@ class AutoRank_Admin {
 				<div style="background:#fff; border:1px solid #ccd0d4; padding:20px; min-width:160px;">
 					<div style="font-size:32px; font-weight:bold;"><?php echo esc_html( $avg ); ?>/100</div>
 					<div>Average SEO score (<?php echo count( $scores ); ?> posts scored)</div>
+				</div>
+				<div style="background:#fff; border:1px solid #ccd0d4; padding:20px; min-width:160px;">
+					<div style="font-size:32px; font-weight:bold;"><?php echo esc_html( $avg_readability ); ?>/100</div>
+					<div>Average readability (<?php echo count( $readability_scores ); ?> posts scored)</div>
 				</div>
 				<div style="background:#fff; border:1px solid #ccd0d4; padding:20px; min-width:160px;">
 					<div style="font-size:32px; font-weight:bold;"><?php echo esc_html( count( $log ) ); ?></div>
@@ -232,6 +257,7 @@ class AutoRank_Admin {
 				<li>JSON-LD structured data (WebSite, Article, Breadcrumbs)</li>
 				<li>Missing image alt text filled in automatically</li>
 				<li>404s logged; turn any of them into a 301 redirect above</li>
+				<li>Readability score (Flesch Reading Ease) with plain-English feedback on every post</li>
 			</ul>
 		</div>
 		<?php
