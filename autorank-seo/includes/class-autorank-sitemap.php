@@ -14,6 +14,19 @@ class AutoRank_Sitemap {
 		add_action( 'init', array( $this, 'add_rewrite_rule' ) );
 		add_filter( 'query_vars', array( $this, 'add_query_var' ) );
 		add_action( 'template_redirect', array( $this, 'maybe_render_sitemap' ) );
+		add_filter( 'redirect_canonical', array( $this, 'skip_trailing_slash_redirect' ) );
+	}
+
+	/**
+	 * Without this, WordPress's canonical redirect appends a trailing slash
+	 * to /sitemap.xml (matching the site's permalink structure) and 301s
+	 * before our rewrite rule gets a chance to match again.
+	 */
+	public function skip_trailing_slash_redirect( $redirect_url ) {
+		if ( '1' === get_query_var( 'autorank_sitemap' ) ) {
+			return false;
+		}
+		return $redirect_url;
 	}
 
 	public function add_rewrite_rule(): void {
