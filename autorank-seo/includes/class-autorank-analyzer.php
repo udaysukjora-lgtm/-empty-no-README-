@@ -26,6 +26,11 @@ class AutoRank_Analyzer {
 		$result = $this->analyze( $post_id );
 		update_post_meta( $post_id, '_autorank_seo_score', $result['score'] );
 		update_post_meta( $post_id, '_autorank_seo_issues', $result['issues'] );
+
+		$readability = $this->analyze_readability( wp_strip_all_tags( $post->post_content ) );
+		update_post_meta( $post_id, '_autorank_readability_score', $readability['score'] );
+		update_post_meta( $post_id, '_autorank_readability_label', $readability['label'] );
+		update_post_meta( $post_id, '_autorank_readability_issues', $readability['issues'] );
 	}
 
 	public function analyze( int $post_id ): array {
@@ -119,5 +124,101 @@ class AutoRank_Analyzer {
 			'score'  => min( 100, $score ),
 			'issues' => $issues,
 		);
+	}
+
+	/**
+	 * Flesch Reading Ease (0-100, higher = easier to read), plus plain-English
+	 * feedback on the two things that move it most: sentence length and
+	 * word complexity.
+	 */
+	public function analyze_readability( string $text ): array {
+		$text = trim( preg_replace( '/\s+/', ' ', $text ) );
+
+		if ( '' === $text ) {
+			return array(
+				'score'  => 0,
+				'label'  => 'No content',
+				'issues' => array( 'Add some content to get a readability score.' ),
+			);
+		}
+
+		$sentences = preg_split( '/[.!?]+(?:\s|$)/', $text, -1, PREG_SPLIT_NO_EMPTY );
+		$sentence_count = max( 1, count( $sentences ) );
+
+		preg_match_all( '/[A-Za-z\'-]+/', $text, $word_matches );
+		$words = $word_matches[0];
+		$word_count = max( 1, count( $words ) );
+
+		$syllable_count = 0;
+		foreach ( $words as $word ) {
+			$syllable_count += $this->count_syllables( $word );
+		}
+
+		$avg_words_per_sentence   = $word_count / $sentence_count;
+		$avg_syllables_per_word   = $syllable_count / $word_count;
+
+		$flesch = 206.835 - ( 1.015 * $avg_words_per_sentence ) - ( 84.6 * $avg_syllables_per_word );
+		$flesch = max( 0, min( 100, round( $flesch ) ) );
+
+		if ( $flesch >= 80 ) {
+			$label = 'Very easy';
+		} elseif ( $flesch >= 60 ) {
+			$label = 'Easy';
+		} elseif ( $flesch >= 50 ) {
+			$label = 'Fairly difficult';
+		} elseif ( $flesch >= 30 ) {
+			$label = 'Difficult';
+		} else {
+			$label = 'Very difficult';
+		}
+
+		$issues = array();
+		if ( $avg_words_per_sentence > 20 ) {
+			$issues[] = 'Sentences average ' . round( $avg_words_per_sentence ) . ' words — split some up (aim for under 20).';
+		}
+		if ( $avg_syllables_per_word > 1.6 ) {
+			$issues[] = 'Word choice leans complex — swap in shorter, simpler words where you can.';
+		}
+
+		$long_sentences = 0;
+		foreach ( $sentences as $sentence ) {
+			if ( str_word_count( $sentence ) > 30 ) {
+				$long_sentences++;
+			}
+		}
+		if ( $long_sentences > 0 ) {
+			$issues[] = $long_sentences . ' sentence(s) are over 30 words long.';
+		}
+
+		if ( empty( $issues ) ) {
+			$issues[] = 'Readability looks good.';
+		}
+
+		return array(
+			'score'  => (int) $flesch,
+			'label'  => $label,
+			'issues' => $issues,
+		);
+	}
+
+	/**
+	 * Rough English syllable count: counts vowel-sound groups, then trims
+	 * the usual silent trailing "e". Good enough for a writing-aid heuristic
+	 * — not a dictionary lookup.
+	 */
+	private function count_syllables( string $word ): int {
+		$word = strtolower( preg_replace( '/[^a-z]/i', '', $word ) );
+		if ( '' === $word ) {
+			return 0;
+		}
+
+		preg_match_all( '/[aeiouy]+/', $word, $groups );
+		$count = count( $groups[0] );
+
+		if ( strlen( $word ) > 2 && substr( $word, -1 ) === 'e' && substr( $word, -2 ) !== 'le' ) {
+			$count--;
+		}
+
+		return max( 1, $count );
 	}
 }
