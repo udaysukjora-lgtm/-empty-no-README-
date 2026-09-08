@@ -12,6 +12,19 @@ class AutoRank_Meta {
 
 	public function __construct() {
 		add_action( 'wp_head', array( $this, 'output_meta_tags' ), 1 );
+		add_filter( 'pre_get_document_title', array( $this, 'filter_document_title' ) );
+	}
+
+	/**
+	 * Makes the actual <title> tag match what we compute for og:title —
+	 * without this, a custom SEO title only reached social share previews,
+	 * not the title search engines show in results.
+	 */
+	public function filter_document_title( string $title ): string {
+		if ( is_admin() ) {
+			return $title;
+		}
+		return $this->get_title();
 	}
 
 	public function output_meta_tags(): void {
