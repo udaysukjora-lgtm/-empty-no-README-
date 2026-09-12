@@ -1,0 +1,119 @@
+/* Shared by all three pages: colours, the top bar, buttons, panels.
+   One file so the three tools cannot drift apart visually. */
+:root{
+  --ground:#F5F5F2; --surface:#FFFFFF; --sunk:#ECECE7; --code-bg:#FBFBF8;
+  --ink:#1A1D22; --muted:#5C646F; --faint:#8B929B; --line:#E1E1DB;
+  --accent:#9A5B12; --accent-soft:#F7EDDE; --accent-line:#E6CDA6;
+  --ok:#1D7355; --ok-soft:#E1F0E9;
+  --bad:#A93A2E; --bad-soft:#F9E5E2;
+  --warn:#8A6210; --warn-soft:#FBF1DC;
+  --ui:"Sora","Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --r:11px;
+  --shadow:0 1px 2px rgba(26,29,34,.05),0 10px 26px rgba(26,29,34,.06);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#14161A; --surface:#1C1F25; --sunk:#0F1115; --code-bg:#101317;
+    --ink:#E6E9ED; --muted:#98A0AB; --faint:#6E7681; --line:#2A2E36;
+    --accent:#E0A458; --accent-soft:#2A2115; --accent-line:#4A3A22;
+    --ok:#5FB88F; --ok-soft:#14251E;
+    --bad:#E5847A; --bad-soft:#2B1917;
+    --warn:#D8A957; --warn-soft:#241D10;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 26px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#14161A; --surface:#1C1F25; --sunk:#0F1115; --code-bg:#101317;
+  --ink:#E6E9ED; --muted:#98A0AB; --faint:#6E7681; --line:#2A2E36;
+  --accent:#E0A458; --accent-soft:#2A2115; --accent-line:#4A3A22;
+  --ok:#5FB88F; --ok-soft:#14251E;
+  --bad:#E5847A; --bad-soft:#2B1917;
+  --warn:#D8A957; --warn-soft:#241D10;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 26px rgba(0,0,0,.3);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:var(--ui); font-size:15px; line-height:1.5;
+  padding-inline:14px; padding-block:0; -webkit-text-size-adjust:100%;
+}
+.app{max-width:1180px; margin-inline:auto; padding-block:0 36px}
+h1,h2,h3{margin:0; letter-spacing:-.01em; text-wrap:balance}
+p{margin:0}
+button,input,textarea,select{font-family:inherit; font-size:inherit; color:inherit}
+button{cursor:pointer}
+code{font-family:var(--mono); font-size:.9em}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:6px}
+[hidden]{display:none!important}
+@media (prefers-reduced-motion:reduce){*{transition:none!important; animation:none!important}}
+
+/* ---- top bar, same on every page ---- */
+.bar{
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  padding-block:14px 12px;
+}
+.brand{display:flex; align-items:center; gap:9px; font-weight:700; font-size:1.05rem; white-space:nowrap}
+.mark{
+  width:26px; height:26px; border-radius:7px; background:var(--accent); color:var(--ground);
+  display:grid; place-items:center; flex:none;
+  font-family:var(--mono); font-size:.78rem; font-weight:600;
+}
+.spacer{flex:1}
+
+.nav{display:flex; gap:4px; background:var(--sunk); border-radius:10px; padding:3px}
+.nav a{
+  text-decoration:none; color:var(--muted); font-size:.85rem; font-weight:600;
+  padding:6px 13px; border-radius:8px; white-space:nowrap;
+}
+.nav a:hover{color:var(--ink)}
+.nav a[aria-current="page"]{background:var(--surface); color:var(--ink); box-shadow:0 1px 2px rgba(0,0,0,.06)}
+
+/* ---- buttons ---- */
+.btn{
+  border:1px solid var(--line); background:var(--surface); color:var(--ink);
+  border-radius:9px; padding:8px 14px; font-weight:600; font-size:.86rem; white-space:nowrap;
+}
+.btn:hover{border-color:var(--accent-line)}
+.btn[disabled]{opacity:.5; cursor:not-allowed}
+.btn-main{background:var(--accent); border-color:var(--accent); color:var(--ground)}
+.btn-main:hover{filter:brightness(1.08); border-color:var(--accent)}
+.btn-sm{padding:5px 10px; font-size:.78rem; border-radius:7px}
+
+/* ---- panels ---- */
+.pane{
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--r);
+  box-shadow:var(--shadow); overflow:hidden; display:flex; flex-direction:column;
+}
+.pane-top{
+  display:flex; align-items:center; gap:10px; padding:8px 12px;
+  border-bottom:1px solid var(--line); min-height:42px;
+}
+.pane-top h2{font-size:.76rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--faint)}
+.pane-foot{
+  display:flex; align-items:center; gap:10px; padding:6px 12px;
+  border-top:1px solid var(--line); font-family:var(--mono);
+  font-size:.72rem; color:var(--faint); flex-wrap:wrap;
+}
+
+/* ---- status pill + note ---- */
+.pill{
+  font-family:var(--mono); font-size:.7rem; font-weight:600; padding:2px 9px;
+  border-radius:99px; border:1px solid var(--line); color:var(--muted); background:var(--sunk);
+}
+.pill.on{color:var(--ok); border-color:var(--ok); background:var(--ok-soft)}
+.pill.off{color:var(--bad); border-color:var(--bad); background:var(--bad-soft)}
+.note{
+  margin-top:12px; border-radius:9px; padding:10px 13px; font-size:.86rem;
+  border:1px solid var(--line); background:var(--surface);
+}
+.note.ok{background:var(--ok-soft); border-color:var(--ok); color:var(--ok)}
+.note.bad{background:var(--bad-soft); border-color:var(--bad); color:var(--bad)}
+.note.warn{background:var(--warn-soft); border-color:var(--warn); color:var(--warn)}
+
+@media (max-width:500px){
+  body{padding-inline:11px}
+  .bar{padding-block:12px 10px}
+  .nav a{padding:6px 11px; font-size:.8rem}
+}

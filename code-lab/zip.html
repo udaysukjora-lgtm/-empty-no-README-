@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>ZIP · Code Lab</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/shell.css">
+<link rel="stylesheet" href="assets/zip.css">
+</head>
+<body>
+
+<!-- Drawn icons, not emoji. Emoji are a different picture on every phone —
+     the clamp used for "compress" renders as a grey blob on most Androids —
+     and they cannot take the page's colours. These are one shape each, in
+     the line weight the rest of the page uses. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <symbol id="i-create" viewBox="0 0 24 24">
+    <rect x="2.5" y="4" width="19" height="4" rx="1.2"/>
+    <path d="M4.5 8v11a1.5 1.5 0 0 0 1.5 1.5h12a1.5 1.5 0 0 0 1.5-1.5V8"/>
+    <path d="M10 12.5h4"/>
+  </symbol>
+  <symbol id="i-extract" viewBox="0 0 24 24">
+    <path d="M3.5 12v7a1.5 1.5 0 0 0 1.5 1.5h14a1.5 1.5 0 0 0 1.5-1.5v-7"/>
+    <path d="M12 15V3"/>
+    <path d="M8.5 6.5 12 3l3.5 3.5"/>
+  </symbol>
+  <symbol id="i-compress" viewBox="0 0 24 24">
+    <path d="M3.5 12h17"/>
+    <path d="M12 3v5.5M9 5.5 12 8.5l3-3"/>
+    <path d="M12 21v-5.5M9 18.5l3-3 3 3"/>
+  </symbol>
+  <symbol id="i-merge" viewBox="0 0 24 24">
+    <path d="M3 6h3.5c3 0 4.5 6 7.5 6h6"/>
+    <path d="M3 18h3.5c3 0 4.5-6 7.5-6"/>
+    <path d="M17 9l3 3-3 3"/>
+  </symbol>
+  <symbol id="i-split" viewBox="0 0 24 24">
+    <path d="M21 6h-3.5c-3 0-4.5 6-7.5 6H3"/>
+    <path d="M21 18h-3.5c-3 0-4.5-6-7.5-6"/>
+    <path d="M18 3l3 3-3 3"/>
+    <path d="M18 15l3 3-3 3"/>
+  </symbol>
+  <symbol id="i-protect" viewBox="0 0 24 24">
+    <rect x="4" y="10.5" width="16" height="10" rx="2"/>
+    <path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/>
+    <path d="M12 14.5v2"/>
+  </symbol>
+  <symbol id="i-info" viewBox="0 0 24 24">
+    <circle cx="10.5" cy="10.5" r="6.5"/>
+    <path d="M15.4 15.4 21 21"/>
+    <path d="M10.5 8v5"/>
+  </symbol>
+</defs></svg>
+<div class="app">
+
+  <header class="bar">
+    <div class="brand"><span class="mark">&gt;_</span> Code Lab</div>
+    <nav class="nav">
+      <a href="index.html">Python</a>
+      <a href="web.html">Web</a>
+      <a href="zip.html" aria-current="page">ZIP</a>
+    </nav>
+    <div class="spacer"></div>
+  </header>
+
+  <div class="col">
+  <nav class="tools" id="tools" aria-label="Tools"></nav>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2 id="toolTitle">Create ZIP</h2>
+      <p id="toolDesc">Pick your files and get one ZIP back.</p>
+    </div>
+
+    <div class="drop" id="drop">
+      <input type="file" id="fileInput" multiple hidden>
+      <button class="btn" id="pickBtn" type="button">Choose files</button>
+      <p id="dropHint">or drag them here</p>
+    </div>
+
+    <ul class="files" id="fileList"></ul>
+    <div class="opts" id="opts"></div>
+    <button class="btn-go" id="goBtn" type="button" disabled>Create ZIP</button>
+
+    <div class="prog" id="prog" hidden>
+      <div class="lbl"><span id="progLabel">Working…</span><b id="progPct">0%</b></div>
+      <div class="bar-track"><div class="bar-fill" id="progFill"></div></div>
+    </div>
+
+    <div class="msg msg-bad" id="err" hidden></div>
+    <div class="result" id="result" hidden></div>
+  </section>
+  </div>
+
+</div>
+<script src="vendor/zip.min.js"></script>
+<script src="assets/zip.js"></script>
+</body>
+</html>

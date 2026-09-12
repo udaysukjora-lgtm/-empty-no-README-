@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Web · Code Lab</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/shell.css">
+<link rel="stylesheet" href="assets/web.css">
+</head>
+<body>
+<div class="app">
+
+  <header class="bar">
+    <div class="brand"><span class="mark">&gt;_</span> Code Lab</div>
+    <nav class="nav">
+      <a href="index.html">Python</a>
+      <a href="web.html" aria-current="page">Web</a>
+      <a href="zip.html">ZIP</a>
+    </nav>
+    <div class="spacer"></div>
+    <button class="btn btn-sm" id="zipBtn" type="button">Download</button>
+    <button class="btn btn-main btn-sm" id="runBtn" type="button">Run</button>
+  </header>
+
+  <div class="crumbs">
+    <span class="namebox"><input type="text" id="projName" value="my-page"
+          spellcheck="false" autocomplete="off" aria-label="Project name"><span>.zip</span></span>
+    <span style="margin-left:auto">Ctrl + Enter runs</span>
+  </div>
+
+  <div class="panes">
+
+    <section class="pane">
+      <div class="pane-top">
+        <div class="tabs">
+          <button type="button" data-tab="html" aria-selected="true">HTML</button>
+          <button type="button" data-tab="css" aria-selected="false">CSS</button>
+          <button type="button" data-tab="js" aria-selected="false">JS</button>
+        </div>
+        <span class="fname" id="edName">index.html</span>
+      </div>
+
+      <textarea id="editor" spellcheck="false" autocapitalize="off"
+                autocorrect="off" aria-label="Code"></textarea>
+
+      <div class="pane-foot">
+        <span id="edSize">0 lines</span>
+        <label class="toggle" style="margin-left:auto">
+          <input type="checkbox" id="autoBox" checked>
+          <span>Run as I type</span>
+        </label>
+      </div>
+    </section>
+
+    <section class="pane">
+      <div class="pane-top">
+        <h2>Preview</h2>
+        <span class="fname" id="ranAt"></span>
+      </div>
+
+      <div class="previewWrap">
+        <iframe id="preview" title="Preview"
+                sandbox="allow-scripts allow-modals allow-forms allow-popups"></iframe>
+      </div>
+
+      <div class="console">
+        <div class="console-top">
+          <span>Console</span>
+          <span class="count" id="logCount"></span>
+          <button class="btn btn-sm" id="clearLogs" type="button" style="margin-left:auto">Clear</button>
+        </div>
+        <div id="logs"></div>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="note" id="note" hidden></div>
+
+</div>
+<script src="vendor/zip.min.js"></script>
+<script src="assets/web.js"></script>
+</body>
+</html>

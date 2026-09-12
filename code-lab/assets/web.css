@@ -1,0 +1,66 @@
+/* The web playground: code on the left, the page it makes on the right. */
+.panes{display:grid; gap:12px; grid-template-columns:1fr}
+@media (min-width:920px){ .panes{grid-template-columns:1fr 1fr; align-items:start} }
+
+.tabs{display:flex; gap:4px}
+.tabs button{
+  border:1px solid transparent; background:transparent; color:var(--muted);
+  border-radius:7px; padding:5px 11px; font-family:var(--mono);
+  font-size:.8rem; font-weight:600;
+}
+.tabs button:hover{color:var(--ink)}
+.tabs button[aria-selected="true"]{
+  background:var(--accent-soft); border-color:var(--accent-line); color:var(--accent);
+}
+.fname{font-family:var(--mono); font-size:.73rem; color:var(--faint); margin-left:auto; white-space:nowrap}
+
+textarea#editor{
+  width:100%; border:0; resize:vertical; display:block;
+  background:var(--code-bg); color:var(--ink);
+  font-family:var(--mono); font-size:13px; line-height:1.65;
+  padding:13px; min-height:300px; height:44vh; tab-size:2;
+}
+textarea#editor:focus{outline:none}
+.toggle{display:flex; align-items:center; gap:6px; font-family:var(--ui);
+  font-size:.78rem; color:var(--muted); cursor:pointer}
+.toggle input{accent-color:var(--accent); width:15px; height:15px}
+
+.previewWrap{background:#fff; border-bottom:1px solid var(--line)}
+#preview{width:100%; border:0; display:block; background:#fff; min-height:300px; height:44vh}
+
+.console{background:var(--sunk); border-top:1px solid var(--line)}
+.console-top{
+  display:flex; align-items:center; gap:9px; padding:6px 12px;
+  font-family:var(--mono); font-size:.72rem; color:var(--faint);
+}
+.count{
+  font-family:var(--mono); font-size:.7rem; font-weight:600; color:var(--muted);
+  background:var(--surface); border:1px solid var(--line); border-radius:99px; padding:1px 8px;
+}
+.count:empty{display:none}
+.count.bad{color:var(--bad); border-color:var(--bad); background:var(--bad-soft)}
+#logs{max-height:140px; overflow:auto; padding:0 12px 9px;
+  font-family:var(--mono); font-size:12px; line-height:1.6}
+#logs .line{padding:3px 0; border-bottom:1px solid var(--line);
+  overflow-wrap:anywhere; white-space:pre-wrap}
+#logs .line:last-child{border-bottom:0}
+#logs .error{color:var(--bad)}
+#logs .warn{color:var(--warn)}
+#logs .empty{color:var(--faint); font-family:var(--ui); font-size:.8rem; padding:4px 0 2px}
+
+.crumbs{
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  padding-bottom:10px; font-family:var(--mono); font-size:.74rem; color:var(--faint);
+}
+.namebox{
+  display:flex; align-items:center; border:1px solid var(--line);
+  border-radius:8px; background:var(--surface); padding:4px 9px;
+}
+.namebox input{border:0; background:transparent; width:9ch; min-width:0; padding:0;
+  font-family:var(--mono); font-size:.8rem}
+.namebox input:focus{outline:none}
+.namebox span{font-family:var(--mono); font-size:.8rem; color:var(--faint)}
+
+@media (max-width:500px){
+  textarea#editor,#preview{height:38vh; min-height:250px}
+}

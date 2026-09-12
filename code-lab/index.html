@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Code Lab</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/shell.css">
+<link rel="stylesheet" href="assets/py.css">
+</head>
+<body>
+<div class="app">
+
+  <header class="bar">
+    <div class="brand"><span class="mark">&gt;_</span> Code Lab</div>
+    <nav class="nav">
+      <a href="index.html" aria-current="page">Python</a>
+      <a href="web.html">Web</a>
+      <a href="zip.html">ZIP</a>
+    </nav>
+    <div class="spacer"></div>
+    <span class="pill" id="ready">starting</span>
+    <button class="btn btn-sm" id="restartBtn" type="button">Restart</button>
+    <button class="btn btn-sm" id="saveBtn" type="button">Download</button>
+    <button class="btn btn-main btn-sm" id="runAllBtn" type="button">Run all</button>
+  </header>
+
+  <div class="crumbs">
+    <span class="namebox"><input type="text" id="fileName" value="notebook"
+          spellcheck="false" autocomplete="off" aria-label="File name"><span>.py</span></span>
+    <span id="cellCount"></span>
+    <span style="margin-left:auto">Ctrl + Enter runs a cell</span>
+  </div>
+
+  <div class="sheet" id="sheet"></div>
+
+  <div class="addrow">
+    <button class="btn btn-sm" id="addBtn" type="button">+ Cell</button>
+  </div>
+
+  <div class="note" id="note" hidden></div>
+
+</div>
+<script src="vendor/zip.min.js"></script>
+<script src="vendor/brython.js"></script>
+<script src="vendor/brython_stdlib.js"></script>
+<script src="assets/py.js"></script>
+</body>
+</html>

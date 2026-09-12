@@ -1,0 +1,84 @@
+/* The notebook: a column of cells, each one run on its own. */
+.sheet{display:flex; flex-direction:column; gap:10px; padding-block:4px}
+
+.cell{
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--r);
+  box-shadow:var(--shadow); overflow:hidden;
+}
+.cell.active{border-color:var(--accent-line)}
+
+.cell-head{
+  display:flex; align-items:center; gap:8px; padding:6px 8px 6px 10px;
+  border-bottom:1px solid var(--line); background:var(--surface);
+}
+.play{
+  width:30px; height:30px; flex:none; border-radius:8px;
+  border:1px solid var(--accent-line); background:var(--accent-soft); color:var(--accent);
+  display:grid; place-items:center; padding:0;
+}
+.play:hover{background:var(--accent); color:var(--ground); border-color:var(--accent)}
+.play[disabled]{opacity:.45; cursor:not-allowed}
+.play svg{width:13px; height:13px; fill:currentColor}
+.tag{font-family:var(--mono); font-size:.72rem; color:var(--faint); min-width:34px}
+.cell-head .spacer{flex:1}
+.icobtn{
+  width:28px; height:28px; padding:0; border-radius:7px; border:1px solid transparent;
+  background:transparent; color:var(--faint); display:grid; place-items:center;
+  font-size:.9rem; line-height:1;
+}
+.icobtn:hover{color:var(--ink); border-color:var(--line); background:var(--sunk)}
+.icobtn[disabled]{opacity:.3; cursor:not-allowed}
+
+textarea.src{
+  width:100%; display:block; border:0; resize:none; overflow:hidden;
+  background:var(--code-bg); color:var(--ink);
+  font-family:var(--mono); font-size:13px; line-height:1.6;
+  padding:12px 13px; min-height:64px; tab-size:4;
+}
+textarea.src:focus{outline:none}
+
+.cell-in{border-top:1px solid var(--line); background:var(--surface); padding:9px 12px 11px}
+.cell-in label{display:block; font-size:.72rem; font-weight:600; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--faint); padding-bottom:5px}
+.cell-in textarea{
+  width:100%; display:block; resize:vertical; min-height:52px;
+  border:1px solid var(--line); border-radius:8px; background:var(--code-bg);
+  font-family:var(--mono); font-size:12.5px; line-height:1.6; padding:8px 10px;
+}
+.cell-in textarea:focus{outline:none; border-color:var(--accent)}
+.cell-in p{font-family:var(--mono); font-size:.7rem; color:var(--faint); padding-top:5px}
+
+.cell-out{border-top:1px solid var(--line); background:var(--sunk)}
+.cell-out pre{
+  margin:0; padding:10px 13px; max-height:340px; overflow:auto;
+  font-family:var(--mono); font-size:12.5px; line-height:1.6;
+  white-space:pre-wrap; overflow-wrap:anywhere;
+}
+.cell-out .err{color:var(--bad)}
+.cell-out .in{color:var(--accent)}
+.cell-out .meta{
+  display:flex; gap:10px; align-items:center; padding:5px 13px;
+  border-top:1px solid var(--line); font-family:var(--mono); font-size:.7rem; color:var(--faint);
+}
+
+.addrow{display:flex; gap:8px; justify-content:center; padding-block:4px 0}
+
+.crumbs{
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  padding-bottom:10px; font-family:var(--mono); font-size:.74rem; color:var(--faint);
+}
+.namebox{
+  display:flex; align-items:center; gap:0; border:1px solid var(--line);
+  border-radius:8px; background:var(--surface); padding:4px 9px;
+}
+.namebox input{
+  border:0; background:transparent; width:9ch; min-width:0; padding:0;
+  font-family:var(--mono); font-size:.8rem;
+}
+.namebox input:focus{outline:none}
+.namebox span{font-family:var(--mono); font-size:.8rem; color:var(--faint)}
+
+@media (max-width:500px){
+  textarea.src{font-size:12.5px; padding:11px}
+  .cell-out pre{font-size:12px; max-height:260px}
+}
